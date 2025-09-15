@@ -1,0 +1,20 @@
+<div class="agent">
+  <h3>Agent Dashboard: {{ agentName }}</h3>
+
+  <div *ngIf="incomingSupplierId" class="incoming-popup">
+    <p>Incoming call from supplier: {{ incomingSupplierId }}</p>
+    <button (click)="accept()">Accept</button>
+    <button (click)="reject()">Reject</button>
+  </div>
+
+  <div *ngIf="inCallWith">In call with: {{ inCallWith }}</div>
+
+  <div style="margin-top:10px;">
+    <p>Remote (Supplier Audio)</p>
+    <audio #remoteAudio autoplay></audio>
+  </div>
+
+  <div style="margin-top:12px;">
+    <button (click)="endCall()" [disabled]="!inCallWith">End Call</button>
+  </div>
+</div>
