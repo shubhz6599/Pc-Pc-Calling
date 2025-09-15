@@ -1,20 +1,25 @@
-<div class="agent">
-  <h3>Agent Dashboard: {{ agentName }}</h3>
+<div class="agent-card">
+  <h2>🎧 Agent Dashboard</h2>
+  <h4>Welcome, {{ agentName }}</h4>
 
   <div *ngIf="incomingSupplierId" class="incoming-popup">
-    <p>Incoming call from supplier: {{ incomingSupplierId }}</p>
-    <button (click)="accept()">Accept</button>
-    <button (click)="reject()">Reject</button>
+    <p>Incoming call from supplier: <strong>{{ incomingSupplierId }}</strong></p>
+    <div class="popup-actions">
+      <button class="btn primary" (click)="accept()">✅ Accept</button>
+      <button class="btn danger" (click)="reject()">❌ Reject</button>
+    </div>
   </div>
 
-  <div *ngIf="inCallWith">In call with: {{ inCallWith }}</div>
+  <div *ngIf="inCallWith" class="in-call">
+    In call with: <strong>{{ inCallWith }}</strong>
+  </div>
 
-  <div style="margin-top:10px;">
-    <p>Remote (Supplier Audio)</p>
+  <div class="audio-box">
+    <p>🎙️ Remote (Supplier Audio)</p>
     <audio #remoteAudio autoplay></audio>
   </div>
 
-  <div style="margin-top:12px;">
-    <button (click)="endCall()" [disabled]="!inCallWith">End Call</button>
+  <div class="end-call">
+    <button class="btn danger" (click)="endCall()" [disabled]="!inCallWith">End Call</button>
   </div>
 </div>

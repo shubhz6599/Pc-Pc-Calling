@@ -1,14 +1,16 @@
-<div class="supplier">
-  <h3>Call Helpdesk (Audio)</h3>
+<div class="supplier-card">
+  <h2>📞 Call Helpdesk (Audio)</h2>
 
-  <div *ngIf="callStatus">{{ callStatus }}</div>
-  <div *ngIf="queuePosition">Queue position: {{ queuePosition }}</div>
+  <div class="status" *ngIf="callStatus">{{ callStatus }}</div>
+  <div class="queue" *ngIf="queuePosition">⏳ Queue position: {{ queuePosition }}</div>
 
-  <button (click)="callHelpdesk()">Call Helpdesk</button>
-  <button (click)="hangup()">Hang Up</button>
+  <div class="actions">
+    <button class="btn primary" (click)="callHelpdesk()">Call Helpdesk</button>
+    <button class="btn danger" (click)="hangup()">Hang Up</button>
+  </div>
 
-  <div style="margin-top:10px;">
-    <p>Remote (Agent Audio)</p>
+  <div class="audio-box">
+    <p>🎧 Remote (Agent Audio)</p>
     <audio #remoteAudio autoplay></audio>
   </div>
 </div>
