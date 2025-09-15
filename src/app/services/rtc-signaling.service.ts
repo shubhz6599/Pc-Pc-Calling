@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RtcSignalingService {
   private socket!: Socket;
-  public socketId:any = '';
+  public socketId: any = '';
   public onQueueStatus = new BehaviorSubject<number | null>(null);
   public onCallRequested = new BehaviorSubject<any | null>(null);
   public onIncomingCall = new BehaviorSubject<any | null>(null);
@@ -22,9 +22,9 @@ export class RtcSignalingService {
   private remoteStream: MediaStream | null = null;
   public onLocalStream = new BehaviorSubject<MediaStream | null>(null);
   public onRemoteStream = new BehaviorSubject<MediaStream | null>(null);
-
+  public onCallRejected = new Subject<void>();
   // set this to your server URL (if server on another machine use http://<server-ip>:3000)
-  private signalingUrl = 'http://localhost:4000';
+  private signalingUrl = 'pc-pc-calling-backend-production.up.railway.app';
   private config: RTCConfiguration = {
     iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
   };
@@ -46,7 +46,7 @@ export class RtcSignalingService {
     this.socket.on('call-started', (data: any) => this.onCallStarted.next(data));
     this.socket.on('call-ended', (data: any) => this.onCallEnded.next(data));
     this.socket.on('agent-registered', (data: any) => this.onAgentRegistered.next(data));
-
+    this.socket.on('call-rejected', () => this.onCallRejected.next());
     // WebRTC relay handlers
     this.socket.on('webrtc-offer', async (data: any) => {
       await this.ensureLocalStream();
@@ -120,7 +120,7 @@ export class RtcSignalingService {
 
   private async createPeerConnection(partnerId?: string) {
     if (this.pc) {
-      try { this.pc.close(); } catch {}
+      try { this.pc.close(); } catch { }
       this.pc = null;
     }
 
@@ -150,7 +150,7 @@ export class RtcSignalingService {
   }
 
   private cleanup() {
-    try { this.pc?.close(); } catch {}
+    try { this.pc?.close(); } catch { }
     this.pc = null;
     if (this.localStream) {
       this.localStream.getTracks().forEach(t => t.stop());
