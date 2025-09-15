@@ -78,7 +78,7 @@ export class RtcSignalingService {
   }
 
   // Agent registers
-  registerAgent(name: string) {
+  registerAgent(name?: string) {
     if (!this.socket) this.connect();
     this.socket.emit('agent-register', { name });
   }

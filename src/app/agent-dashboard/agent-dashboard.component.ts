@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export class AgentDashboardComponent implements OnInit {
   @ViewChild('remoteAudio') remoteAudio!: ElementRef<HTMLAudioElement>;
 
-  agentName = 'Helpdesk-1';
+  agentName = '';
   incomingSupplierId: string | null = null;
   inCallWith: string | null = null;
   subs: Subscription[] = [];
@@ -19,7 +19,11 @@ export class AgentDashboardComponent implements OnInit {
 
   ngOnInit() {
   this.rtc.connect();
-  this.rtc.registerAgent(this.agentName);
+  this.rtc.registerAgent();
+
+  this.subs.push(this.rtc.onAgentRegistered.subscribe(data => {
+    if (data?.name) this.agentName = data.name;
+  }));
 
   this.subs.push(this.rtc.onIncomingCall.subscribe(data => {
     if (data) this.incomingSupplierId = data.supplierId;
@@ -43,6 +47,8 @@ export class AgentDashboardComponent implements OnInit {
   this.subs.push(this.rtc.onCallEnded.subscribe(() => {
     this.cleanupCall();
   }));
+
+  this.subs.push(this.rtc.onCallRejected.subscribe(() => this.cleanupCall()));
 }
 
 accept() {
